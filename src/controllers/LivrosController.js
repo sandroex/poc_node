@@ -3,17 +3,23 @@ import Livro from '../models/Livro.js';
 export default class LivrosController 
 {
     static getAll = (req, res) => {
-        Livro.find((err, data) => {
-            if(err) return res.status(500).send({message: `${err} - Falha ao buscar livros`})
-            res.status(200).json(data);
+        Livro
+            .find()
+            .populate('autor')
+            .exec((err, data) => {
+                if(err) return res.status(500).send({message: `${err} - Falha ao buscar livros`})
+                res.status(200).json(data);
         }) 
     }
 
     static getLivroPorTitulo = (req, res) => {
         let titulo = req.body.titulo;
-        Livro.find({titulo},(err, data) => {
-            if(err) return res.status(500).send({message: `${err} - Falha ao buscar o título`})
-            res.status(200).json(data);
+        Livro
+            .find({titulo})
+            .populate('autor', 'nome')
+            .exec((err, data) => {
+                if(err) return res.status(500).send({message: `${err} - Falha ao buscar o título`})
+                res.status(200).json(data);
         } )
     }
 
